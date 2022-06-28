@@ -11,8 +11,7 @@
 # https://stackoverflow.com/questions/72757412/cli-that-find-the-pictures-folder-of-the-operating-system/72763503#72763503
 
 import qrcode
-import sys
-import os
+from pathlib import Path
 # In order of use
 
 url = input("What is your URL? ")
@@ -23,6 +22,7 @@ fill_color = input("\nWhat would you like your fill color to be?\n(default = Bla
 back_color = input("\nWhat would you like your back color to be?\n(default = White): ").lower()
 file_name = input("\nWhat would you like your file to be named?\n(leave out the file type, e.g. .png): ")
 file_name = file_name + ".png"
+destination = input("\nWhat would you like your save destination to be?\nJust the file name (default = Pictures): ")
 # Options for the qrcode
 
 if version == "":version = 1
@@ -33,7 +33,9 @@ if border == "":border = 4
 border = int(border)
 if fill_color == "":fill_color = "black"
 if back_color == "":back_color = "white"
-if file_name == "": file_name = "file_name"
+if file_name == ".png": file_name = "file_name.png"
+if destination == "": destination = "Pictures"
+destination == (destination.capitalize())
 
 qcode = qrcode.QRCode(version = version, box_size = box_size, border = border)
 # Look of qrcode
@@ -44,16 +46,8 @@ qcode.make(fit=True)
 img = qcode.make_image(fill_color = fill_color, back_color = back_color)
 # The colors of the qrcode
 
-if sys.platform.startswith("linux"):
-    userpath = os.path.expanduser("~")
-    img.save(f"{userpath}/Pictures/{file_name}")
-elif sys.platform.startswith("win"):
-    userpath = os.path.expanduser("~")
-    img.save(f"{userpath}/Pictures/{file_name}")
-elif sys.platform.startswith("darwin"):
-    userpath = os.path.expanduser("~")
-    img.save(f"{userpath}/Pictures/{file_name}")
-    #img.save(f"${HOME}/Pictures/{file_name}")
-# Check OS type and path to Pictures folder
+save_destination = Path.home()/destination
+print(save_destination)
+img.save(f"{save_destination}/{file_name}")
 # Make sure this file isn't called qrcode.py
 # For some reason this will return an error
